@@ -10,7 +10,8 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play" % "2.4.0" % "provided",
-  "com.typesafe.play"  %% "play-test" % "2.4.0" % "test"
+  "com.typesafe.play"  %% "play-test" % "2.4.0" % "test",
+  "org.specs2" %% "specs2-core" % "2.3.12" % "test"
 )
 
 parallelExecution in Test := false
