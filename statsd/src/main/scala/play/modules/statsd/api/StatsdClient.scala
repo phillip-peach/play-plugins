@@ -1,5 +1,7 @@
 package play.modules.statsd.api
 
+import javax.inject.Inject
+import play.api.{Configuration, Play}
 import play.Logger
 import scala.util.control.NonFatal
 
@@ -154,4 +156,5 @@ trait StatsdClient {
  * Wrap the [[play.modules.statsd.api.StatsdClient]] trait configured with
  * [[play.modules.statsd.api.RealStatsdClientCake]] in an object to make it available to the app.
  */
-object Statsd extends StatsdClient with RealStatsdClientCake
+class Statsd @Inject() (val config: Configuration) extends StatsdClient with RealStatsdClientCake {
+}

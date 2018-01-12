@@ -1,5 +1,6 @@
 package play.modules.statsd.api
 
+import javax.inject.Inject
 import play.api._
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
@@ -17,7 +18,7 @@ import util.control.NonFatal
  * }
  * }}}
  */
-class StatsdFilter extends EssentialFilter {
+class StatsdFilter @Inject() (statsd: Statsd) extends EssentialFilter {
 
   lazy val prefix = loadPrefix("statsd.routes.prefix", "routes.")
   lazy val totalPrefix = loadPrefix("statsd.routes.combined.prefix", "routes.combined.")
@@ -60,26 +61,26 @@ class StatsdFilter extends EssentialFilter {
         })
       }).getOrElse(totalPrefix + "handlerNotFound")
 
-      Statsd.increment(key)
+      statsd.increment(key)
 
       def handleError() = {
         val time = System.currentTimeMillis() - start
-        Statsd.timing(key, time)
-        Statsd.timing(totalPrefix + "time", time)
-        Statsd.increment(totalPrefix + "500")
-        Statsd.increment(totalPrefix + "error")
+        statsd.timing(key, time)
+        statsd.timing(totalPrefix + "time", time)
+        statsd.increment(totalPrefix + "500")
+        statsd.increment(totalPrefix + "error")
       }
 
       def recordStats(result: Result) = {
         val time = System.currentTimeMillis() - start
-        Statsd.timing(key, time)
-        Statsd.timing(totalPrefix + "time", time)
+        statsd.timing(key, time)
+        statsd.timing(totalPrefix + "time", time)
         val status = result.header.status
-        Statsd.increment(totalPrefix + status)
+        statsd.increment(totalPrefix + status)
         if (status >= 500) {
-          Statsd.increment(totalPrefix + "error")
+          statsd.increment(totalPrefix + "error")
         } else {
-          Statsd.increment(totalPrefix + "success")
+          statsd.increment(totalPrefix + "success")
         }
         result
       }

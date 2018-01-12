@@ -1,6 +1,8 @@
 package play.modules.statsd;
 
-import play.modules.statsd.api.Statsd$;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import play.modules.statsd.api.StatsdClient;
 import play.modules.statsd.function.Function0;
 import scala.runtime.AbstractFunction0;
@@ -8,7 +10,10 @@ import scala.runtime.AbstractFunction0;
 /**
  * Java API to Statsd
  */
+@Singleton
 public class Statsd {
+
+    @Inject protected static StatsdClient client;
 
     /**
      * Increment the given key by 1
@@ -123,6 +128,6 @@ public class Statsd {
     }    
 
     private static StatsdClient client() {
-        return Statsd$.MODULE$;
+        return Statsd.client;
     }
 }

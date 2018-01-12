@@ -3,9 +3,9 @@ package play.modules.statsd.api
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import play.api.Configuration
 import play.Logger
 import scala.util.Random
-import play.api.Play
 
 /**
  * Configuration trait for the [[play.modules.statsd.api.StatsdClient]].
@@ -36,6 +36,8 @@ trait StatsdClientCake {
  */
 private[api] trait RealStatsdClientCake extends StatsdClientCake {
 
+  val config: Configuration
+
   // The property name for whether or not the statsd sending should be enabled.
   private val StatsdEnabledProperty = "statsd.enabled"
 
@@ -53,7 +55,7 @@ private[api] trait RealStatsdClientCake extends StatsdClientCake {
 
   // The stat prefix used by the client.
   override val statPrefix = {
-    Play.maybeApplication flatMap { _.configuration.getString(StatPrefixProperty) } getOrElse {
+    config.getString(StatPrefixProperty) getOrElse {
       Logger.warn("No stat prefix configured, using default of statsd")
       "statsd"
     }
