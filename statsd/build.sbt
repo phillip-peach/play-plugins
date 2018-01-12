@@ -33,5 +33,13 @@ lazy val root = project in file(".")
 lazy val sample = (project in file("sample/sample-statsd"))
   .enablePlugins(PlayScala)
   .settings(
-    Keys.fork in Test := false
+    Keys.fork in Test := false,
+    scalaVersion := "2.11.7",
+    libraryDependencies ++= Seq(
+      ws,
+      "com.typesafe.play" %% "play" % "2.4.0" % "provided",
+      "com.typesafe.play"  %% "play-test" % "2.4.0" % "test",
+      "org.specs2" %% "specs2-core" % "2.3.12" % "test",
+      "org.specs2" %% "specs2-junit" % "2.3.12" % "test"
+    )
   ).dependsOn(root).aggregate(root)

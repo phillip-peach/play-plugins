@@ -2,6 +2,7 @@ package test
 
 import java.net.{SocketTimeoutException, DatagramPacket, DatagramSocket}
 import org.specs2.mutable._
+import play.api.Application
 import play.api.test.Helpers._
 import play.api.test._
 import org.specs2.execute.{AsResult, Result}
@@ -54,12 +55,12 @@ object IntegrationTestSpec extends Specification {
     }
 
     "report stats on failure" in new Setup {
-      makeWsRequest("/sync/failure")
+      makeWsRequest("/sync/failure")(fakeApp)
       receive(count("sample.routes.sync.failure.get"), timing("sample.routes.sync.failure.get"), combinedTime, combinedError, combined500)
     }
 
     "report stats on failure thrown in async" in new Setup {
-      makeWsRequest("/async/failure")
+      makeWsRequest("/async/failure")(fakeApp)
       receive(count("sample.routes.async.failure.get"), timing("sample.routes.async.failure.get"), combinedTime, combinedError, combined500)
     }
 
@@ -69,7 +70,7 @@ object IntegrationTestSpec extends Specification {
     }
 
     "report stats on handlerNotFound" in new Setup {
-      makeWsRequest("/does/not/exist", 404)
+      makeWsRequest("/does/not/exist", 404)(fakeApp)
       receive(count("sample.routes.combined.handlerNotFound"), timing("sample.routes.combined.handlerNotFound", 0), timing("sample.routes.combined.time", 0), combinedSuccess, combined404)
     }
 
@@ -79,7 +80,7 @@ object IntegrationTestSpec extends Specification {
     status(route(FakeRequest("GET", path)).get) must_== expectedStatus
   }
 
-  def makeWsRequest(path: String, expectedStatus: Int = 500) {
+  def makeWsRequest(path: String, expectedStatus: Int = 500)(implicit app: Application) {
     Await.result(WS.url("http://localhost:9001" + path).get(), Duration.apply("2s")).status must_== expectedStatus
   }
 

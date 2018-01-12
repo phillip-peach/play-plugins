@@ -84,9 +84,7 @@ class StatsdFilter extends EssentialFilter {
       }
 
       // Invoke the action
-      try {
-        next(rh).map(recordStats)
-      } catch {
+      next(rh).map(recordStats) recover {
         case NonFatal(t) => {
           handleError
           throw t
