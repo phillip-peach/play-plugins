@@ -48,7 +48,7 @@ class StatsdFilter extends EssentialFilter {
       val key = rh.tags.get(Router.Tags.RouteVerb).map({ verb =>
         val path = rh.tags(Router.Tags.RoutePattern)
         val cacheKey = verb + path
-        prefix + keyCache.get(cacheKey).getOrElse {
+        prefix + keyCache.getOrElse(cacheKey, {
           val key = statsKeyFromComments(rh.tags(Router.Tags.RouteComments)).getOrElse {
             // Convert paths of form GET /foo/bar/$paramname<regexp>/blah to foo.bar.paramname.blah.get
             val p = path.replaceAll("""\$([^<]+)<[^>]+>""", "$1").replace('/', pathSeparator).dropWhile(_ == pathSeparator)
@@ -57,12 +57,12 @@ class StatsdFilter extends EssentialFilter {
           }
           keyCache.putIfAbsent(cacheKey, key)
           key
-        }
+        })
       }).getOrElse(totalPrefix + "handlerNotFound")
 
       Statsd.increment(key)
 
-      def handleError = {
+      def handleError() = {
         val time = System.currentTimeMillis() - start
         Statsd.timing(key, time)
         Statsd.timing(totalPrefix + "time", time)
@@ -87,7 +87,7 @@ class StatsdFilter extends EssentialFilter {
       // Invoke the action
       next(rh).map(recordStats) recover {
         case NonFatal(t) => {
-          handleError
+          handleError()
           throw t
         }
       }
