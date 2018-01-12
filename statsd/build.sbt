@@ -2,15 +2,15 @@ name := "play-statsd"
     
 organization := "com.typesafe.play.plugins"
 
-version := "2.4.0"
+version := "2.5.0"
 
 scalaVersion := "2.11.1"
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play" % "2.4.0" % "provided",
-  "com.typesafe.play"  %% "play-test" % "2.4.0" % "test",
+  "com.typesafe.play" %% "play" % "2.5.18" % "provided",
+  "com.typesafe.play"  %% "play-test" % "2.5.18" % "test",
   "org.specs2" %% "specs2-core" % "2.3.12" % "test"
 )
 
@@ -24,7 +24,7 @@ publishTo <<= (version) { version: String =>
   else                                   Some("releases"  at nexus + "maven-releases/")
 }
  
-javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint:unchecked", "-encoding", "UTF-8")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked", "-encoding", "UTF-8")
 
 scalacOptions += "-deprecation"
   

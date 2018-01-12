@@ -3,6 +3,7 @@ package play.modules.statsd.api
 import play.api._
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
+import play.api.routing.Router
 import scala.collection.concurrent.TrieMap
 import java.util.Locale
 import util.control.NonFatal
@@ -44,11 +45,11 @@ class StatsdFilter extends EssentialFilter {
       val start = System.currentTimeMillis()
 
       // Calculate key
-      val key = rh.tags.get(Routes.ROUTE_VERB).map({ verb =>
-        val path = rh.tags(Routes.ROUTE_PATTERN)
+      val key = rh.tags.get(Router.Tags.RouteVerb).map({ verb =>
+        val path = rh.tags(Router.Tags.RoutePattern)
         val cacheKey = verb + path
         prefix + keyCache.get(cacheKey).getOrElse {
-          val key = statsKeyFromComments(rh.tags(Routes.ROUTE_COMMENTS)).getOrElse {
+          val key = statsKeyFromComments(rh.tags(Router.Tags.RouteComments)).getOrElse {
             // Convert paths of form GET /foo/bar/$paramname<regexp>/blah to foo.bar.paramname.blah.get
             val p = path.replaceAll("""\$([^<]+)<[^>]+>""", "$1").replace('/', pathSeparator).dropWhile(_ == pathSeparator)
             val normalisedPath = if (p.lastOption.filter(_ != '.').isDefined) p + '.' else p

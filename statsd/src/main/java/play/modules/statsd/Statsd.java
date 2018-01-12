@@ -1,8 +1,8 @@
 package play.modules.statsd;
 
-import play.libs.F;
 import play.modules.statsd.api.Statsd$;
 import play.modules.statsd.api.StatsdClient;
+import play.modules.statsd.function.Function0;
 import scala.runtime.AbstractFunction0;
 
 /**
@@ -77,7 +77,7 @@ public class Statsd {
      * @param key   The key to report timing for
      * @param timed The function to time
      */
-    public static <T> T time(String key, F.Function0<T> timed) {
+    public static <T> T time(String key, Function0<T> timed) {
         return time(key, 1.0, timed);
     }
 
@@ -88,7 +88,7 @@ public class Statsd {
      * @param rate  The rate to sample at
      * @param timed The function to time
      */
-    public static <T> T time(String key, double rate, final F.Function0<T> timed) {
+    public static <T> T time(String key, double rate, final Function0<T> timed) {
         return client().time(key, rate, new AbstractFunction0<T>() {
             public T apply() {
                 try {

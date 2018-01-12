@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import play.libs.F;
+import play.Application;
+import play.modules.statsd.function.Function0;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
@@ -21,7 +22,7 @@ import static org.junit.Assert.fail;
 public class StatsdTest {
     private static final int PORT = 57475;
     private DatagramSocket mockStatsd;
-    private FakeApplication fakeApp;
+    private Application fakeApp;
 
     @Before
     public void setUp() throws IOException {
@@ -46,7 +47,7 @@ public class StatsdTest {
         Statsd.gauge("test", 42);
         assertThat(receive(), equalTo("statsd.test:42|g"));
     }
-    
+
     @Test
     public void gaugeWithDeltaShouldSendGaugeMessage() throws Exception {
         Statsd.gauge("test", 10, true);
@@ -81,7 +82,7 @@ public class StatsdTest {
 
     @Test
     public void functionShouldBeTimedAndReportMessage() throws Exception {
-        String result = Statsd.time("test", new F.Function0<String>() {
+        String result = Statsd.time("test", new Function0<String>() {
             @Override
             public String apply() throws Throwable {
                 Thread.sleep(10);
