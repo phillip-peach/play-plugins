@@ -35,10 +35,11 @@ lazy val sample = (project in file("sample/sample-statsd"))
   .settings(
     Keys.fork in Test := false,
     scalaVersion := "2.11.7",
+    routesGenerator := StaticRoutesGenerator,
     libraryDependencies ++= Seq(
       ws,
-      "com.typesafe.play" %% "play" % "2.4.0" % "provided",
-      "com.typesafe.play"  %% "play-test" % "2.4.0" % "test",
+      "com.typesafe.play" %% "play" % "2.5.0" % "provided",
+      "com.typesafe.play"  %% "play-test" % "2.5.0" % "test",
       "org.specs2" %% "specs2-core" % "2.3.12" % "test",
       "org.specs2" %% "specs2-junit" % "2.3.12" % "test"
     )
