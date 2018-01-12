@@ -119,5 +119,5 @@ private[api] trait RealStatsdClientCake extends StatsdClientCake {
   /**
    * Don't do anything. Used if statsd isn't enabled or on config errors.
    */
-  private def noopSend(stat: String) = Unit
+  private def noopSend(stat: String) = ()
 }
