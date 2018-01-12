@@ -11,7 +11,7 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play" % "2.5.18" % "provided",
   "com.typesafe.play"  %% "play-test" % "2.5.18" % "test",
-  "org.specs2" %% "specs2-core" % "2.3.12" % "test"
+  specs2 % "test"
 )
 
 parallelExecution in Test := false
@@ -24,7 +24,7 @@ publishTo <<= (version) { version: String =>
   else                                   Some("releases"  at nexus + "maven-releases/")
 }
  
-javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked", "-encoding", "UTF-8")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked", "-Xlint:deprecation", "-encoding", "UTF-8")
 
 scalacOptions += "-deprecation"
   
@@ -35,12 +35,12 @@ lazy val sample = (project in file("sample/sample-statsd"))
   .settings(
     Keys.fork in Test := false,
     scalaVersion := "2.11.7",
+    scalacOptions += "-deprecation",
     routesGenerator := StaticRoutesGenerator,
     libraryDependencies ++= Seq(
       ws,
       "com.typesafe.play" %% "play" % "2.5.0" % "provided",
       "com.typesafe.play"  %% "play-test" % "2.5.0" % "test",
-      "org.specs2" %% "specs2-core" % "2.3.12" % "test",
-      "org.specs2" %% "specs2-junit" % "2.3.12" % "test"
+      specs2 % "test"
     )
   ).dependsOn(root).aggregate(root)
